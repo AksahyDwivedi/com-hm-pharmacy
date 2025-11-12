@@ -1,0 +1,128 @@
+entity Medicines {
+  MedicineID Integer
+  Name String
+  Manufacturer String
+  Category String
+  Price BigDecimal
+  Stock Integer
+}
+
+entity MedicineBatches {
+  BatchID Integer
+  MedicineID Integer
+  BatchNumber String
+  ExpiryDate LocalDate
+  Quantity Integer
+  PurchaseID Integer
+}
+
+
+entity Customers {
+  CustomerID Integer
+  Name String
+  Phone String
+  Email String
+  Address TextBlob
+}
+
+entity Suppliers {
+  SupplierID Integer
+  Name String
+  ContactPerson String
+  Phone String
+  Email String
+  Address TextBlob
+}
+
+
+
+entity Purchases {
+  PurchaseID Integer
+  SupplierID Integer
+  PurchaseDate LocalDate
+  InvoiceNumber String
+  TotalAmount BigDecimal
+}
+
+
+	
+entity PurchaseItems {
+  PurchaseItemID Integer
+  PurchaseID Integer
+  MedicineID Integer
+  Quantity Integer
+  Price BigDecimal
+}
+
+
+
+
+entity Sales {
+  SaleID Integer
+  CustomerID Integer
+  SaleDate Instant
+  InvoiceNumber String
+  TotalAmount BigDecimal
+}
+
+entity SaleItems {
+  SaleItemID Integer
+  SaleID Integer
+  MedicineID Integer
+  Quantity Integer
+  Price BigDecimal
+}
+
+
+entity Prescriptions {
+  PrescriptionID Integer
+  CustomerID Integer
+  DoctorName String
+  PrescriptionDate LocalDate
+  Notes TextBlob
+}
+
+entity Payments {
+  PaymentID Integer
+  SaleID Integer
+  PaymentDate Instant
+  PaymentMethod String
+  PaymentStatus String
+  Amount BigDecimal
+}
+
+entity SupplierPayments {
+  SupplierPaymentID Integer
+  SupplierID Integer
+  PurchaseID Integer
+  PaymentDate Instant
+  PaymentMethod String
+  PaymentStatus String
+  AmountPaid BigDecimal
+}
+
+
+relationship OneToOne {
+	Suppliers{SupplierID} to Purchases
+    Suppliers{SupplierID} to SupplierPayments
+}
+relationship OneToOne {
+	Purchases{SupplierID} to PurchaseItems
+    Purchases{SupplierID} to MedicineBatches
+    Purchases{SupplierID} to SupplierPayments
+}
+
+relationship OneToOne {
+    Medicines{MedicineID} to PurchaseItems
+	Medicines{MedicineID} to MedicineBatches
+    Medicines{MedicineID} to SaleItems
+}
+relationship OneToOne {
+	Customers{CustomerID} to Prescriptions
+    Customers{CustomerID} to Sales
+}
+
+relationship OneToOne {
+	Sales{SaleID} to SaleItems
+    Sales{SaleID} to Payments
+}
